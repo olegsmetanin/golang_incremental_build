@@ -1,0 +1,24 @@
+version: '3'
+services:
+
+  lb:
+    image: dockercloud/haproxy
+    links:
+      - api
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8080:80
+
+  api:
+    image: golang:1.9.2
+    volumes:
+      - ./src/api:/go/src/api
+    working_dir: /go/src/api
+    command: sh ./dev.sh
+    expose:
+      - "8080"
+    environment:
+      - URL_BASE_PATH=/api
+ 
+# Other services
